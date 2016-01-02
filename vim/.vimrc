@@ -8,7 +8,7 @@ colorscheme solarized
 
 """"""""""""""" plugins """"""""""""""""
 
-"vundle plugins
+""vundle plugins
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
@@ -30,8 +30,30 @@ call vundle#end()
 filetype on
 
 "airline settings
-"let g:airline_theme='solarized'
 let g:airline_theme='solarized'
+
+"set left and right seperator
+let g:airline_left_sep = ''
+let g:airline_right_sep = '|'
+
+" don't count trailing whitespace since it lags in huge files
+let g:airline#extensions#whitespace#enabled = 0
+
+" Enable the list of buffers
+let g:airline#extensions#tabline#enabled = 1
+" Show just the filename
+let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline_mode_map = {
+      \ '__' : '-',
+      \ 'n'  : 'Nr',
+      \ 'i'  : 'In',
+      \ 'R'  : 'R',
+      \ 'c'  : 'Cm',
+      \ 'v'  : 'Vs',
+      \ 'V'  : 'Vs',
+      \ 's'  : 'S',
+      \ 'S'  : 'S',
+      \ }
 
 """"""""""""""" basic editing setup """""""""""""
 
@@ -73,6 +95,8 @@ set nohlsearch            " Don't continue to highlight searched phrases.
 set incsearch             " But do highlight as you type your search.
 "set ignorecase           " Make searches case-insensitive.
 
+"7. handle multiple buffers (without having to save between switch)
+set hidden
 
 """""""""""""""" visual setup """""""""""""
 
@@ -118,7 +142,6 @@ set ls=2
 
 ""NOTE - add insert mode maps for basic commands such as to delete a line
 ""       or to move to end of line, etc. binding can start with cmd/ctl.
-
 
 "proper split screen support
 "  navigate b/w splits and tabs
