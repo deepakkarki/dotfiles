@@ -1,5 +1,6 @@
 " get rid of Vi compatibility mode
 set nocompatible
+set term=xterm-256color
 let &t_Co=256
 
 "color/theme settings
@@ -21,8 +22,17 @@ Plugin 'VundleVim/Vundle.vim'
 " nerdtree file browser plugin form github
 Plugin 'scrooloose/nerdtree'
 
+" git plugin for vim and to show status in airline
+Plugin 'tpope/vim-fugitive'
+
+" git plugin to show added, modified and deleted lines
+Plugin 'airblade/vim-gitgutter'
+
 " airline (status bar) plugin from github
 Plugin 'bling/vim-airline'
+
+" add indent guidelines
+Plugin 'nathanaelkane/vim-indent-guides'
 
 " All of your Plugins must be added before the following line
 call vundle#end()
@@ -34,7 +44,7 @@ let g:airline_theme='solarized'
 
 "set left and right seperator
 let g:airline_left_sep = ''
-let g:airline_right_sep = '|'
+let g:airline_right_sep = ''
 
 " don't count trailing whitespace since it lags in huge files
 let g:airline#extensions#whitespace#enabled = 0
@@ -55,7 +65,43 @@ let g:airline_mode_map = {
       \ 'S'  : 'S',
       \ }
 
-""""""""""""""" basic editing setup """""""""""""
+"variable names                default contents
+"  ----------------------------------------------------------------------------
+"  let g:airline_section_a       (mode, crypt, paste, iminsert)
+"  let g:airline_section_b       (hunks, branch)
+"  let g:airline_section_c       (bufferline or filename)
+"  let g:airline_section_gutter  (readonly, csv)
+"  let g:airline_section_x       (tagbar, filetype, virtualenv)
+"  let g:airline_section_y       (fileencoding, fileformat)
+"  let g:airline_section_z       (percentage, line number, column number)
+"  let g:airline_section_warning (syntastic, whitespace)
+
+let g:airline_section_c = '%F'
+let g:airline_section_y = ''
+let g:airline_section_z = '%l/%L, %2c'
+
+" fugitive settings
+let g:airline#extensions#branch#format = 'CustomBranchName'
+function! CustomBranchName(name)
+  if a:name != ""
+    return '[' . a:name . ']'
+  endif
+  return ""
+endfunction
+
+" indent guide settings
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_exclude_filetypes = ['help', 'nerdtree', 'netrw']
+
+let g:indent_guides_guide_size = 1
+let g:indent_guides_start_level = 2
+hi IndentGuidesEven guibg=black ctermbg=black
+hi IndentGuidesOdd guibg=black ctermbg=black
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""" basic editing setup """"""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""
 
 "1. set auto indent
 set ai
@@ -104,7 +150,7 @@ set hidden
 set number
 
 "2. set scroll offset
-"set so=10
+set so=10
 
 "3. trailing space markers
 set list
@@ -151,6 +197,27 @@ set ls=2
 "file nav
 "  nerdTree and ctrlP
 "  again manage jumping to nerdTree
+" Toggle Vexplore with Ctrl-E
+function! ToggleVExplorer()
+  if exists("t:expl_buf_num")
+      let expl_win_num = bufwinnr(t:expl_buf_num)
+      if expl_win_num != -1
+          let cur_win_nr = winnr()
+          exec expl_win_num . 'wincmd w'
+          close
+          exec cur_win_nr . 'wincmd w'
+          unlet t:expl_buf_num
+      else
+          unlet t:expl_buf_num
+      endif
+  else
+      exec '1wincmd w'
+      Vexplore
+      let t:expl_buf_num = bufnr("%")
+  endif
+endfunction
+let g:netrw_liststyle=3
+map <silent> <C-e> :call ToggleVExplorer()<CR>
 map <C-f> :NERDTreeToggle<CR>
 
 "proper navigation (mostly key mappings)
@@ -187,7 +254,7 @@ map <C-f> :NERDTreeToggle<CR>
 "go to definition
 "git support (language independent)
 "api doc generation
-"have project concept like eclipse does. 
+"have project concept like eclipse does.
 "  search for function, class throughout the project.
 "  list all instance where a function / class have been used
 
