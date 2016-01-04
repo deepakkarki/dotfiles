@@ -31,9 +31,6 @@ Plugin 'airblade/vim-gitgutter'
 " airline (status bar) plugin from github
 Plugin 'bling/vim-airline'
 
-" add indent guidelines
-Plugin 'nathanaelkane/vim-indent-guides'
-
 " All of your Plugins must be added before the following line
 call vundle#end()
 
@@ -88,15 +85,6 @@ function! CustomBranchName(name)
   endif
   return ""
 endfunction
-
-" indent guide settings
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_exclude_filetypes = ['help', 'nerdtree', 'netrw']
-
-let g:indent_guides_guide_size = 1
-let g:indent_guides_start_level = 2
-hi IndentGuidesEven guibg=black ctermbg=black
-hi IndentGuidesOdd guibg=black ctermbg=black
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
@@ -229,9 +217,17 @@ map <C-f> :NERDTreeToggle<CR>
 "code folding based on indentation
 "  need to think of a nice interface for this (like how to I trigger the code
 "    folding?)
+"folding settings
+set foldmethod=indent   "fold based on indent (should check out syntax based folding)
+set foldnestmax=12      "deepest fold is 12 levels
+set nofoldenable        "dont fold by default
+set foldlevel=1         "default is zero -> does not look good
 
 "TMUX support?
 
+
+"TODO :
+"   add maps for navig
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "This was the basic config - nothing language specific
 
